@@ -1,0 +1,3 @@
+v1
+
+[ Text Input 📝 ] → [ Show Tokens 🔡 ] → [ Show Token IDs 🔢 ]
