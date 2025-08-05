@@ -37,11 +37,11 @@ const Tokenizer = () => {
     return (
         <>
             <div className="p-6 max-w-2xl mx-auto">
-                <h1 className="text-2xl font-bold mb- text-white">Token Visualizer</h1>
+                <h1 className="text-2xl font-bold mb- text-black">Token Visualizer</h1>
 
                 <textarea
                     value={text}
-                    className="w-full p-3 border rounded mb-4 border-white placeholder:text-white text-white"
+                    className="w-full p-3 border rounded mb-4 border-black placeholder:text-black text-black"
                     placeholder="type something"
                     onChange={handleChange}
                     rows={4}
@@ -54,7 +54,7 @@ const Tokenizer = () => {
                 <div className="flex flex-wrap gap-2 text-white">Total Tokens: {tokenIds.length}</div>
             </div>
 
-            {/* <div className="mt-6">
+            <div className="mt-6">
                 <h2 className="text-lg font-semibold mb-2">Tokens</h2>
                 <div className="flex flex-wrap gap-2">
                     {tokens.map((tok, i) => (
@@ -63,7 +63,7 @@ const Tokenizer = () => {
                         </span>
                     ))}
                 </div>
-            </div> */}
+            </div>
 
 
 
