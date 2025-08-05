@@ -14,9 +14,9 @@ function App() {
     <>
     <div>
         <Routes>
-                  <Route path="/"element={<Tokenizer />} />
+                  <Route path="/tokenizer"element={<Tokenizer />} />
 
-        <Route path="/token-game" element={<TokenGame />} />
+        <Route path="/" element={<TokenGame />} />
       </Routes>
       </div>
     </>
