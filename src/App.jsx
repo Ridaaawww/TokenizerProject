@@ -15,7 +15,8 @@ function App() {
   return (
     <>
       <div>
-        <StarBackground />
+      <StarBackground />
+
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/tokenizer" element={<Tokenizer />} />

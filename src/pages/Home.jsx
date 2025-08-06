@@ -1,12 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import StarBackground from '../components/StarBackground';
 
 function Home() {
   return (
     <>
-      <StarBackground />
       <div className="min-h-screen flex flex-col items-center justify-center px-6 bg-black text-center relative overflow-hidden">
         {/* Matrix-style background elements */}
         <div className="absolute inset-0">
