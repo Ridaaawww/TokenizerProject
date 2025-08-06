@@ -47,6 +47,9 @@ export default function Game() {
   const getToken = (text) => {
     const enc = encoding_for_model("gpt-3.5-turbo");
     const tokens = enc.encode(text);
+    console.log(text)
+    console.log(tokens)
+  
     return tokens.length
   }
 
@@ -63,6 +66,7 @@ export default function Game() {
       }
 
       setResult(`Correct! the token count is ${actual}`);
+  
     }
     else {
       setResult(`Incorrect! The token count is ${actual}.`);
@@ -81,7 +85,7 @@ export default function Game() {
 
   return (
  <>
-     <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center p-8">
+     <div className="min-h-screen bg-black-950 text-white flex items-center justify-center p-8">
   <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-10 max-w-xl w-full border border-white/20">
       <h1 className="text-3xl font-bold mb-6"> Guess the Token Count</h1>
       <div className="text-lg mb-4 text-center max-w-xl">
@@ -114,6 +118,7 @@ export default function Game() {
       >
         Submit
       </button>
+      {/* <pre>{JSON.stringify(Array.from (tokens))}</pre> */}
 
       {result && (
         <motion.p

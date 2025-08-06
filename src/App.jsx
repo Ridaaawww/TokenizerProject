@@ -6,18 +6,21 @@ import Tokenizer from './Tokenizer'
 import TokenGame from './pages/TokenGame'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Link } from 'react-router-dom'
+import Home from './pages/Home'
+import StarBackground from './components/StarBackground'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
-    <div>
+      <div>
+        <StarBackground />
         <Routes>
-                  <Route path="/tokenizer"element={<Tokenizer />} />
-
-        <Route path="/" element={<TokenGame />} />
-      </Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/tokenizer" element={<Tokenizer />} />
+          <Route path="/game" element={<TokenGame />} />
+        </Routes>
       </div>
     </>
   )
