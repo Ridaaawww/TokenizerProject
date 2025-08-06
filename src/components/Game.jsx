@@ -2,21 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { encoding_for_model } from "@dqbd/tiktoken";
 import { motion, AnimatePresence } from "framer-motion";
 
-
-
-
-
-{/*Set up basic game layout
-
-Hardcode a few sentences
-
-Let user input token guess
-
-Check guess vs. actual
-
-Reveal result, update streak*/}
-
-
 export default function Game() {
   //sentences
   const sentences = [
@@ -33,121 +18,252 @@ export default function Game() {
     "Tiktoken counts tokens, not words or characters.",
     "Your guess is as good as mine.",
     "Tokenization is not as simple as it seems.",
-    "I love building games like this one."
+    "I love building games like this one.",
+    "GPT doesn't think, it predicts the next token.",
+    "Transformers use self-attention, not magic.",
+    "Tokenization is the unsung hero of NLP.",
+    "OpenAI fine-tuned language models on massive corpus",
+    "Token limits make prompt engineering an art form.", "Code is poetry for machines.",
+    "Every abstraction leaks eventually.",
+    "Naming things is the hardest part of programming.",
+    "Premature optimization is the root of all evil.",
+    "A good API is a love letter to its users.",
+    "It works on my machine.",
+    "Semicolons are optional, but so is sanity.",
+    "JavaScript has types... sorta.",
+    "99 little bugs in the code, take one down, patch it around..."
+
+
   ];
   //storing states of the game
   const [index, setIndex] = useState(0);
   const [guess, setGuess] = useState("");
   const [streak, setStreak] = useState(0);
   const [result, setResult] = useState("");
-  const [highScore, sethighScore] = useState(0)
-
+  const [highScore, sethighScore] = useState(() => {
+    const saved = localStorage.getItem('tokenGuesserHighScore');
+    return saved ? parseInt(saved) : 0;
+  });
+  const [tokenId, setTokenId] = useState([])
+  const [decoded, setDecoded] = useState("")
 
   // Function to encode text into tokens using tiktoken
   const getToken = (text) => {
     const enc = encoding_for_model("gpt-3.5-turbo");
     const tokens = enc.encode(text);
-    console.log(text)
-    console.log(tokens)
-  
+    const tokenArray = Array.from(tokens);
+    setTokenId(tokenArray);
+
+    const decoded = tokenArray.map((tokenId) => enc.decode([tokenId]))
+    setDecoded(decoded)
+    console.log("decoded tokens", decoded)
     return tokens.length
   }
 
-  //function to guess the token count
-  const guessToken = () => {
-    const actual = getToken(sentences[index])
-    const userGuess = parseInt(guess)
-    //checking the score and highscore
-    if (userGuess == actual) {
-      const newStreak = streak + 1
-      setStreak(newStreak);
-      if (newStreak > highScore) {
-        sethighScore(newStreak);
-      }
+      //function to guess the token count
+    const guessToken = () => {
+      const actual = getToken(sentences[index])
+      const userGuess = parseInt(guess)
+      //checking the score and highscore
+      if (userGuess == actual) {
+        const newStreak = streak + 1
+        setStreak(newStreak);
+        if (newStreak > highScore) {
+          sethighScore(newStreak);
+          localStorage.setItem('tokenGuesserHighScore', newStreak.toString());
+        }
 
-      setResult(`Correct! the token count is ${actual}`);
-  
-    }
-    else {
-      setResult(`Incorrect! The token count is ${actual}.`);
-      setStreak(0);
-    }
+        setResult(`Correct! the token count is ${actual}`);
+
+      }
+      else {
+        setResult(`Incorrect! The token count is ${actual}.`);
+        setStreak(0);
+      }
 
     //setTimeout to reset guess after 2 seconds
     setTimeout(() => {
       setIndex((index) => (index + 1) % sentences.length);
       setResult("");
       setGuess("");
+    }, 3000);
 
-
+    //resetting the tokenId state after 3 seconds
+    setTimeout(() => {
+      setTokenId([]);
     }, 3000);
   }
 
+  //function to reset scores
+  const resetScores = () => {
+    setStreak(0);
+    sethighScore(0);
+    localStorage.removeItem('tokenGuesserHighScore');
+  }
+
   return (
- <>
-     <div className="min-h-screen bg-black-950 text-white flex items-center justify-center p-8">
-  <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-10 max-w-xl w-full border border-white/20">
-      <h1 className="text-3xl font-bold mb-6"> Guess the Token Count</h1>
-      <div className="text-lg mb-4 text-center max-w-xl">
-        <AnimatePresence mode="wait">
-          <motion.p
-            key={index}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
-            className="text-lg mb-4"
-          >
-            {sentences[index]}
-          </motion.p>
-        </AnimatePresence>
+    <>
+      <div className="min-h-screen bg-black text-green-400 flex items-center justify-center p-8 relative overflow-hidden">
+        {/* Matrix-style background elements */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-20 left-10 w-1 h-1 bg-green-500 rounded-full animate-pulse"></div>
+          <div className="absolute top-40 right-20 w-0.5 h-0.5 bg-green-400 rounded-full animate-ping"></div>
+          <div className="absolute bottom-32 left-1/4 w-1 h-1 bg-green-600 rounded-full animate-bounce"></div>
+          <div className="absolute bottom-20 right-1/3 w-0.5 h-0.5 bg-green-500 rounded-full animate-pulse"></div>
+          <div className="absolute top-1/2 left-1/3 w-1 h-1 bg-green-400 rounded-full animate-pulse delay-1000"></div>
+          <div className="absolute top-1/3 right-1/4 w-0.5 h-0.5 bg-green-600 rounded-full animate-ping delay-500"></div>
+        </div>
+
+        {/* Corner border elements */}
+        <div className="absolute top-0 left-0 w-16 h-16 border-l-2 border-t-2 border-green-400/30"></div>
+        <div className="absolute top-0 right-0 w-16 h-16 border-r-2 border-t-2 border-green-400/30"></div>
+        <div className="absolute bottom-0 left-0 w-16 h-16 border-l-2 border-b-2 border-green-400/30"></div>
+        <div className="absolute bottom-0 right-0 w-16 h-16 border-r-2 border-b-2 border-green-400/30"></div>
+
+        {/* Main game container */}
+        <div className="relative z-10 bg-gray-900/50 backdrop-blur-sm border border-green-500/30 rounded-xl shadow-[0_0_30px_rgba(34,197,94,0.2)] p-8 max-w-2xl w-full">
+          {/* Header */}
+          <div className="mb-8 text-center">
+            <h1 className="text-3xl font-bold mb-2 text-white font-mono">
+              <span className="text-green-400">{'>'}</span> TOKEN_GUESSER
+            </h1>
+            <div className="w-32 h-0.5 bg-green-400 mx-auto rounded-full shadow-[0_0_10px_rgba(34,197,94,0.3)]"></div>
+          </div>
+
+          {/* Current sentence display */}
+          <div className="mb-8">
+            <div className="text-green-400 font-mono text-sm mb-4">{'>'} CURRENT_SENTENCE</div>
+            <div className="bg-black/50 border border-green-400/30 rounded-lg p-4">
+              <AnimatePresence mode="wait">
+                <motion.p
+                  key={index}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                  className="text-lg text-white font-mono leading-relaxed"
+                >
+                  {sentences[index]}
+                </motion.p>
+              </AnimatePresence>
+            </div>
+          </div>
+
+          {/* Token IDs display */}
+          <div className="mb-8">
+            <div className="text-green-400 font-mono text-sm mb-4">{'>'} TOKEN_ANALYSIS</div>
+            <AnimatePresence>
+              {tokenId.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="bg-black/50 border border-green-400/30 rounded-lg p-4"
+                >
+                  <div className="flex flex-wrap gap-2">
+                    {tokenId.map((id, idx) => (
+                      <span
+                        key={idx}
+                        className="bg-green-400/10 border border-green-400/30 text-green-400 px-2 py-1 rounded text-xs font-mono hover:bg-green-400/20 hover:border-green-400/60 transition-all duration-300"
+                      >
+                        {id}
+                      </span>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Input section */}
+          <div className="mb-8">
+            <div className="text-green-400 font-mono text-sm mb-4">{'>'} USER_INPUT</div>
+            <div className="flex gap-4">
+              <input
+                type="number"
+                value={guess}
+                onChange={(e) => setGuess(e.target.value)}
+                className="flex-1 p-3 bg-black border border-green-400/50 rounded-lg text-green-400 font-mono placeholder:text-green-400/50 focus:border-green-400 focus:outline-none focus:shadow-[0_0_15px_rgba(34,197,94,0.2)] transition-all duration-300"
+                placeholder="Enter token count guess..."
+              />
+              <button
+                onClick={guessToken}
+                className="px-6 py-3 bg-black border-2 border-green-400 rounded-lg font-mono font-bold text-green-400 hover:bg-green-400 hover:text-black transition-all duration-300 shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_30px_rgba(34,197,94,0.5)]"
+              >
+                SUBMIT
+              </button>
+            </div>
+          </div>
+
+          {/* Result display */}
+          {result && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="mb-8"
+            >
+              <div className="bg-black/50 border border-green-400/30 rounded-lg p-4">
+                <div className="text-green-400 font-mono text-sm mb-2">{'>'} RESULT</div>
+                <p className="text-white font-mono">{result}</p>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Score display */}
+          <div className="text-center">
+            <div className="text-green-400 font-mono text-sm mb-4">{'>'} SCORE_BOARD</div>
+            <div className="bg-black/50 border border-green-400/30 rounded-lg p-4">
+              <motion.span
+                key={streak}
+                initial={{ scale: 0.8 }}
+                animate={{ scale: 1.2 }}
+                transition={{ type: "spring", stiffness: 300 }}
+                className="text-green-400 font-bold font-mono text-lg"
+              >
+                🔥 STREAK: {streak} | 🏆 HIGH_SCORE: {highScore}
+              </motion.span>
+            </div>
+            
+            {/* Share to Twitter button */}
+            <div className="mt-4 flex gap-4 justify-center">
+              <button
+                onClick={() => {
+                  const tweetText = `🎮 Just achieved a ${streak}-token streak and ${highScore} high score in the Token Guesser game! Can you think like GPT? 🤖 #AI #Tokenization #GPT #CodingGame`;
+                  const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+                  window.open(tweetUrl, '_blank');
+                }}
+                className="px-6 py-3 bg-black border-2 border-green-400 rounded-lg font-mono font-bold text-green-400 hover:bg-green-400 hover:text-black transition-all duration-300 shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_30px_rgba(34,197,94,0.5)] flex items-center justify-center gap-2"
+              >
+                <span className="text-xl"></span>
+                <span>SHARE_SCORE</span>
+              </button>
+              
+              <button
+                onClick={resetScores}
+                className="px-6 py-3 bg-black border-2 border-red-400 rounded-lg font-mono font-bold text-red-400 hover:bg-red-400 hover:text-black transition-all duration-300 shadow-[0_0_20px_rgba(239,68,68,0.3)] hover:shadow-[0_0_30px_rgba(239,68,68,0.5)] flex items-center justify-center gap-2"
+              >
+                <span className="text-xl"></span>
+                <span>RESET_SCORES</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Status indicators */}
+          <div className="flex justify-between text-green-400 text-xs font-mono mt-8">
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></div>
+              <span>GAME_ACTIVE</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></div>
+              <span>READY_FOR_GUESS</span>
+            </div>
+          </div>
+        </div>
       </div>
-
-
-      <input
-        type="number"
-        value={guess}
-        onChange={(e) => setGuess(e.target.value)}
-        className="p-2 rounded text-white bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        placeholder="Enter your guess"
-      />
-
-      <button
-        onClick={guessToken}
-        className="mt-4 bg-blue-500 px-6 py-2 rounded hover:bg-blue-600"
-      >
-        Submit
-      </button>
-      {/* <pre>{JSON.stringify(Array.from (tokens))}</pre> */}
-
-      {result && (
-        <motion.p
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          className="mt-4"
-        >
-          {result}
-        </motion.p>
-      )}
-
-     
-     <div className='mt-6 text-center,py-2'>
- <motion.span
-  key={streak}
-  initial={{ scale: 0.8 }}
-  animate={{ scale: 1.2 }}
-  transition={{ type: "spring", stiffness: 300 }}
-  className="text-green-400 font-bold"
->
-  🔥 Streak: {streak} |🏆 High Score: {highScore}
-</motion.span>
-
-     </div>
-    
-    </div>
-    </div>
     </>
   );
 }
