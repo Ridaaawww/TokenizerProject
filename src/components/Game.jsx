@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { encoding_for_model } from "@dqbd/tiktoken";
 import { motion, AnimatePresence } from "framer-motion";
 import StarBackground from './StarBackground';
+import TokenizationModal from './TokenizationModal';
+import FloatingDecodeButton from './FloatingDecodeButton';
+import DetailedTokenizationGuide from './DetailedTokenizationGuide';
 
 export default function Game() {
   //sentences
@@ -47,6 +50,8 @@ export default function Game() {
   });
   const [tokenId, setTokenId] = useState([])
   const [decoded, setDecoded] = useState("")
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDetailedGuideOpen, setIsDetailedGuideOpen] = useState(false);
 
   // Function to encode text into tokens using tiktoken
   const getToken = (text) => {
@@ -133,6 +138,17 @@ export default function Game() {
               <span className="text-green-400 animate-pulse">{'>'}</span> TOKEN_GUESSER
             </h1>
             <div className="w-24 md:w-32 h-0.5 bg-green-400 mx-auto rounded-full shadow-[0_0_15px_rgba(34,197,94,0.5)] animate-pulse"></div>
+            
+            {/* Tokenization Info Button */}
+            <div className="mt-4">
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="px-4 py-2 bg-black/50 border border-green-400/30 rounded-lg text-green-400 font-mono text-sm hover:bg-green-400/20 hover:border-green-400/60 transition-all duration-300 shadow-[0_0_15px_rgba(34,197,94,0.2)] hover:shadow-[0_0_25px_rgba(34,197,94,0.4)] backdrop-blur-sm flex items-center gap-2 mx-auto"
+              >
+                <span className="text-green-400"></span>
+                <span>LEARN_TOKENIZATION</span>
+              </button>
+            </div>
           </div>
 
           {/* Current sentence display */}
@@ -269,6 +285,23 @@ export default function Game() {
           </div>
         </div>
       </div>
+
+      {/* Tokenization Modal */}
+      <TokenizationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+
+      {/* Detailed Tokenization Guide Modal */}
+      <DetailedTokenizationGuide
+        isOpen={isDetailedGuideOpen}
+        onClose={() => setIsDetailedGuideOpen(false)}
+      />
+
+      {/* Floating Decode Button */}
+      <FloatingDecodeButton
+        onOpenGuide={() => setIsDetailedGuideOpen(true)}
+      />
     </>
   );
 }
