@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import Home from './pages/Home'
 import StarBackground from './components/StarBackground'
+import { Analytics } from "@vercel/analytics/next"
 
 function App() {
   const [count, setCount] = useState(0)
@@ -15,6 +16,7 @@ function App() {
   return (
     <>
       <div>
+        <Analytics/>
       <StarBackground />
 
         <Routes>
