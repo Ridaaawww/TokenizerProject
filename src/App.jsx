@@ -16,7 +16,6 @@ function App() {
   return (
     <>
       <div>
-        <Analytics/>
       <StarBackground />
 
         <Routes>
@@ -25,6 +24,7 @@ function App() {
           <Route path="/game" element={<TokenGame />} />
         </Routes>
       </div>
+      <Analytics/>
     </>
   )
 }
